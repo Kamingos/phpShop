@@ -25,6 +25,17 @@ include __DIR__ . '/partials/header.php';
 <section class="hero">
     <h1>Каталог Шопика</h1>
     <p>Смотрите категории и товары. Зарегистрируйтесь, чтобы добавлять в корзину и оформлять тестовые заказы.</p>
+    <?php if (!is_logged_in()): ?>
+        <div class="inline-form" style="margin-top: 16px;">
+            <a class="button" href="/register.php">Регистрация</a>
+            <a class="button secondary" href="/login.php">Войти</a>
+        </div>
+    <?php else: ?>
+        <div class="inline-form" style="margin-top: 16px;">
+            <a class="button" href="/cart.php">Корзина</a>
+            <a class="button secondary" href="/my_orders.php">Мои заказы</a>
+        </div>
+    <?php endif; ?>
 </section>
 
 <section>
@@ -62,7 +73,7 @@ include __DIR__ . '/partials/header.php';
                 <?php endif; ?>
                 <h3><?= e($product['name']) ?></h3>
                 <p><?= e($product['category_name'] ?? 'Без категории') ?></p>
-                <p class="price">$<?= number_format((float) $product['price'], 2) ?></p>
+                <p class="price">₽<?= number_format((float) $product['price'], 0) ?></p>
                 <a class="button" href="/product.php?id=<?= (int) $product['id'] ?>">Смотреть</a>
             </div>
         <?php endforeach; ?>

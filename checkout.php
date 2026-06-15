@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pdo->beginTransaction();
     try {
         $stmt = $pdo->prepare('INSERT INTO orders (user_id, status) VALUES (?, ?)');
-        $stmt->execute([$user['id'], 'paid_test']);
+        $stmt->execute([$user['id'], 'new']);
         $orderId = (int) $pdo->lastInsertId();
 
         $stmt = $pdo->prepare(
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$user['id']]);
         $pdo->commit();
 
-        flash('success', 'Заказ оформлен в тестовом режиме.');
-        redirect('/orders.php');
+        flash('success', 'Заказ #' . $orderId . ' оформлен!');
+        redirect('/my_orders.php');
     } catch (Throwable $e) {
         $pdo->rollBack();
         flash('error', 'Не удалось оформить заказ.');
@@ -57,16 +57,41 @@ include __DIR__ . '/partials/header.php';
 ?>
 
 <section class="card">
-    <h2>Оформление (тест)</h2>
+    <h2>Оформление заказа</h2>
+    <p class="alert" style="background:#fff3cd;color:#856404;margin-bottom:16px;">
+        <strong>Тестовый режим:</strong> оплата не производится. Заказ будет виден в админке.
+    </p>
     <?php if (!$items): ?>
         <p>Корзина пуста.</p>
     <?php else: ?>
-        <p>Итого: <strong>$<?= number_format($total, 2) ?></strong></p>
+        <div class="order-summary">
+            <h3>Состав заказа:</h3>
+            <?php foreach ($items as $item): ?>
+                <p><?= e($item['name']) ?> — <?= (int) $item['qty'] ?> x ₽<?= number_format((float) $item['price'], 0) ?></p>
+            <?php endforeach; ?>
+            <p><strong>Итого: ₽<?= number_format($total, 0) ?></strong></p>
+        </div>
         <form method="post" action="/checkout.php">
             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
             <button type="submit">Подтвердить заказ</button>
         </form>
     <?php endif; ?>
 </section>
+
+<style>
+.order-summary {
+    background: #f8f4ed;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+.order-summary h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+.order-summary p {
+    margin: 4px 0;
+}
+</style>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

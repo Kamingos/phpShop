@@ -18,7 +18,8 @@ $user = current_user();
             <a href="/">Каталог</a>
             <?php if ($user): ?>
                 <a href="/cart.php">Корзина</a>
-                <a href="/orders.php">Заказы</a>
+                <a href="/my_orders.php">Заказы</a>
+                <a href="/profile.php">Профиль</a>
             <?php endif; ?>
             <?php if ($user && $user['role'] === 'admin'): ?>
                 <a href="/admin/index.php">Админка</a>

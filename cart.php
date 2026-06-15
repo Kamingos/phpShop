@@ -104,7 +104,7 @@ include __DIR__ . '/partials/header.php';
                                 <button type="submit" class="secondary">Обновить</button>
                             </form>
                         </td>
-                        <td>$<?= number_format((float) $item['price'], 2) ?></td>
+                        <td>₽<?= number_format((float) $item['price'], 0) ?></td>
                         <td>
                             <form method="post" action="/cart.php">
                                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
@@ -118,7 +118,7 @@ include __DIR__ . '/partials/header.php';
             </tbody>
         </table>
         <div class="card">
-            <p><strong>Итого:</strong> $<?= number_format($total, 2) ?></p>
+            <p><strong>Итого:</strong> ₽<?= number_format($total, 0) ?></p>
             <div class="inline-form">
                 <a class="button" href="/checkout.php">Оформить (тест)</a>
                 <form method="post" action="/cart.php">

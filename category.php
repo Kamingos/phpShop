@@ -45,7 +45,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="product-image"></div>
                 <?php endif; ?>
                 <h3><?= e($product['name']) ?></h3>
-                <p class="price">$<?= number_format((float) $product['price'], 2) ?></p>
+                <p class="price">₽<?= number_format((float) $product['price'], 0) ?></p>
                 <a class="button" href="/product.php?id=<?= (int) $product['id'] ?>">Смотреть</a>
             </div>
         <?php endforeach; ?>

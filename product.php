@@ -34,7 +34,7 @@ endif;
     <h2><?= e($product['name']) ?></h2>
     <p><?= e($product['category_name'] ?? 'Без категории') ?></p>
     <p><?= e($product['description']) ?></p>
-    <p class="price">$<?= number_format((float) $product['price'], 2) ?></p>
+    <p class="price">₽<?= number_format((float) $product['price'], 0) ?></p>
 
     <?php if (is_logged_in()): ?>
         <form class="inline-form" method="post" action="/cart.php">

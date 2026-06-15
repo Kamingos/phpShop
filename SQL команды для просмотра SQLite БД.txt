@@ -1,0 +1,4 @@
+
+
+вывод users
+php.exe -r "require 'db.php'; print_r(db()->query('SELECT * FROM users')->fetchAll());"
