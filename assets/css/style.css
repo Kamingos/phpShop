@@ -20,7 +20,7 @@ body {
     margin: 0;
     font-family: 'Source Sans 3', sans-serif;
     color: var(--ink);
-    background: radial-gradient(circle at top left, #fffaf1 0%, var(--bg) 45%, var(--bg-accent) 100%);
+    background: radial-gradient(circle at top, #e4cda4 20%, var(--bg) 45%, var(--bg-accent) 100%);
     min-height: 100vh;
 }
 
@@ -33,7 +33,7 @@ body {
 .site-header {
     position: sticky;
     top: 0;
-    background: rgba(246, 242, 234, 0.92);
+    background: radial-gradient(linear at top, #e4cda4 20%, var(--bg) 85%, var(--bg-accent) 100%);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
     padding: 16px 32px;
@@ -89,7 +89,7 @@ body {
 .hero {
     padding: 32px;
     border-radius: 20px;
-    background: linear-gradient(140deg, #ffffff, #f8f2e8);
+    background: linear-gradient(90deg, #fffbf5, #f8f2e8);
     box-shadow: var(--shadow);
     border: 1px solid var(--line);
 }
