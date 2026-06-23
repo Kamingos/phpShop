@@ -1,4 +1,99 @@
+Команды sqlite3 и полезные SQL-запросы для просмотра `data/shop.sqlite`
 
+-- Быстрые команды sqlite3 (в интерактивном клиенте)
+.tables               -- показать таблицы
+.schema <table>       -- показать схему таблицы
+.mode column
+.headers on
+PRAGMA foreign_keys = ON;
+.dump                -- экспорт всей базы
 
-вывод users
-php.exe -r "require 'db.php'; print_r(db()->query('SELECT * FROM users')->fetchAll());"
+-- CREATE TABLE (из `db.php`)
+CREATE TABLE IF NOT EXISTS users (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	email TEXT NOT NULL UNIQUE,
+	password_hash TEXT NOT NULL,
+	role TEXT NOT NULL DEFAULT "user",
+	created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS products (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	category_id INTEGER NULL,
+	name TEXT NOT NULL,
+	description TEXT NOT NULL,
+	price REAL NOT NULL,
+	image_path TEXT NULL,
+	is_active INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS cart_items (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_id INTEGER NOT NULL,
+	product_id INTEGER NOT NULL,
+	qty INTEGER NOT NULL DEFAULT 1,
+	UNIQUE(user_id, product_id)
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_id INTEGER NOT NULL,
+	status TEXT NOT NULL DEFAULT "new",
+	created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS order_items (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	order_id INTEGER NOT NULL,
+	product_id INTEGER NOT NULL,
+	qty INTEGER NOT NULL,
+	price REAL NOT NULL
+);
+
+-- Частые SELECT запросы (просмотр данных)
+SELECT * FROM users;
+SELECT id, email, role FROM users WHERE id = 1;
+SELECT COUNT(*) FROM users WHERE role = 'admin';
+
+SELECT id, name FROM categories ORDER BY name;
+SELECT * FROM categories WHERE id = 1;
+
+SELECT * FROM products WHERE id = 1 AND is_active = 1;
+SELECT id, name, price FROM products ORDER BY name LIMIT 20;
+SELECT COUNT(*) FROM products;
+
+SELECT * FROM cart_items WHERE user_id = 1;
+SELECT * FROM orders WHERE user_id = 1;
+SELECT oi.* FROM order_items oi JOIN orders o ON o.id = oi.order_id WHERE o.user_id = 1;
+SELECT SUM(oi.price * oi.qty) FROM order_items oi JOIN orders o ON o.id = oi.order_id WHERE o.user_id = 1;
+
+SELECT COUNT(*) FROM orders WHERE status = 'new';
+
+-- Вставки / обновления / удаления (из кода)
+INSERT INTO users (email, password_hash, role) VALUES ('user@test', 'hash', 'user');
+
+-- Добавление в корзину с обновлением при конфликте (SQLite upsert)
+INSERT INTO cart_items (user_id, product_id, qty)
+  VALUES (1, 2, 1)
+  ON CONFLICT(user_id, product_id) DO UPDATE SET qty = qty + excluded.qty;
+
+UPDATE cart_items SET qty = 3 WHERE user_id = 1 AND product_id = 2;
+DELETE FROM cart_items WHERE user_id = 1 AND product_id = 2;
+DELETE FROM cart_items WHERE user_id = 1;
+
+INSERT INTO orders (user_id, status) VALUES (1, 'processing');
+INSERT INTO order_items (order_id, product_id, qty, price) VALUES (1, 2, 1, 1999);
+
+UPDATE orders SET status = 'shipped' WHERE id = 1;
+UPDATE users SET password_hash = 'newhash' WHERE id = 1;
+DELETE FROM products WHERE id = 10;
+
+-- Полезная однострочная команда через PHP (пример)
+php -r "require 'db.php'; print_r(db()->query('SELECT * FROM users')->fetchAll());"
+
+-- Примечание: заменяйте `1` и другие значения на нужные идентификаторы при проверке.

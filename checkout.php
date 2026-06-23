@@ -21,7 +21,7 @@ foreach ($items as $item) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     check_csrf();
-    if (!$items) {
+    if (empty($items)) {
         flash('error', 'Корзина пуста.');
         redirect('/cart.php');
     }
@@ -61,7 +61,7 @@ include __DIR__ . '/partials/header.php';
     <p class="alert" style="background:#fff3cd;color:#856404;margin-bottom:16px;">
         <strong>Тестовый режим:</strong> оплата не производится. Заказ будет виден в админке.
     </p>
-    <?php if (!$items): ?>
+    <?php if (empty($items)): ?>
         <p>Корзина пуста.</p>
     <?php else: ?>
         <div class="order-summary">

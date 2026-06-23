@@ -16,9 +16,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         flash('error', 'Пароль должен быть не короче 6 символов.');
     } else {
         try {
-            $stmt = db()->prepare('INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)');
+            $pdo = db();
+            $stmt = $pdo->prepare('INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)');
             $stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT), 'user']);
-            $_SESSION['user_id'] = (int) db()->lastInsertId();
+            $_SESSION['user_id'] = (int) $pdo->lastInsertId();
             flash('success', 'Аккаунт создан.');
             redirect('/');
         } catch (Throwable $e) {

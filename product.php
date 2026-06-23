@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/db.php';
 
+$pdo = db();
 $productId = (int) ($_GET['id'] ?? 0);
-$stmt = db()->prepare(
+$stmt = $pdo->prepare(
     'SELECT p.*, c.name AS category_name
      FROM products p
      LEFT JOIN categories c ON c.id = p.category_id
@@ -14,7 +15,7 @@ $product = $stmt->fetch(PDO::FETCH_ASSOC);
 $page_title = $product ? $product['name'] : 'Товар';
 include __DIR__ . '/partials/header.php';
 
-if (!$product):
+if (empty($product)):
 ?>
     <div class="card">
         <p>Товар не найден.</p>
@@ -34,7 +35,7 @@ endif;
     <h2><?= e($product['name']) ?></h2>
     <p><?= e($product['category_name'] ?? 'Без категории') ?></p>
     <p><?= e($product['description']) ?></p>
-    <p class="price">₽<?= number_format((float) $product['price'], 0) ?></p>
+    <p class="price"><?= number_format((float) $product['price'], 0) ?>₽</p>
 
     <?php if (is_logged_in()): ?>
         <form class="inline-form" method="post" action="/cart.php">

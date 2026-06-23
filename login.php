@@ -10,7 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim((string) ($_POST['email'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
 
-    $stmt = db()->prepare('SELECT id, password_hash FROM users WHERE email = ?');
+    $pdo = db();
+    $stmt = $pdo->prepare('SELECT id, password_hash FROM users WHERE email = ?');
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -41,7 +42,7 @@ include __DIR__ . '/partials/header.php';
         </label>
         <button type="submit">Войти</button>
     </form>
-    <p>Демо-админ: admin@local / admin123</p>
+    <p>...</p>
 </section>
 
 <?php include __DIR__ . '/partials/footer.php'; ?>

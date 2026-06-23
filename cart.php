@@ -75,7 +75,7 @@ include __DIR__ . '/partials/header.php';
 
 <section>
     <h2 class="section-title">Ваша корзина</h2>
-    <?php if (!$items): ?>
+    <?php if (empty($items)): ?>
         <div class="card">
             <p>Корзина пуста.</p>
         </div>

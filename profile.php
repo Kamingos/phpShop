@@ -48,7 +48,7 @@ include __DIR__ . '/partials/header.php';
     <p><strong>Email:</strong> <?= e($user['email']) ?></p>
     <p><strong>Роль:</strong> <?= $user['role'] === 'admin' ? 'Администратор' : 'Пользователь' ?></p>
     <p><strong>Всего заказов:</strong> <?= $totalOrders ?></p>
-    <p><strong>Потрачено:</strong> $<?= number_format((float) $totalSpent, 2) ?></p>
+    <p><strong>Потрачено:</strong> <?= number_format((float) $totalSpent, 2) ?>₽</p>
 </section>
 
 <section class="card">
