@@ -4,9 +4,16 @@ $(function () {
     if ($live.length) {
         var url = $live.data('feed-url');
         var load = function () {
-            $.get(url, function (data) {
-                if (data && data.html) {
-                    $live.html(data.html);
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                success: function (data) {
+                    if (data && data.html) {
+                        $live.html(data.html);
+                    }
+                },
+                error: function() {
+                    console.error('Ошибка при загрузке заказов');
                 }
             });
         };

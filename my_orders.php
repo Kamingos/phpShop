@@ -20,7 +20,7 @@ include __DIR__ . '/partials/header.php';
 <script>
 $(function() {
     function loadOrders() {
-        $.get('/api/user_orders.php', function(data) {
+        $.getJSON('/api/user_orders.php', function(data) {
             if (data.html && $('#user-orders').length) {
                 $('#user-orders').html(data.html);
             }
