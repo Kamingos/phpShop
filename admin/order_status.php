@@ -14,4 +14,10 @@ if ($id > 0 && in_array($status, $allowed, true)) {
     flash('success', 'Статус заказа обновлен.');
 }
 
-redirect('/admin/orders.php');
+// Если это AJAX запрос, возвращаем JSON вместо редиректа
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
+} else {
+    redirect('/admin/orders.php');
+}
